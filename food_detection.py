@@ -10,7 +10,7 @@ config = Config(".env")
 GEMINI_API_KEY = config("GEMINI_API_KEY")
 
 
-@app.get("/")
+@app.get("/food_detection")
 def food_detection(img_path: str):
     # set api key retrieved from .env file GEMINI_API_KEY variable
     genai.configure(api_key=GEMINI_API_KEY)
