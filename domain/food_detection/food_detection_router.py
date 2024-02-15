@@ -1,19 +1,17 @@
 import PIL.Image
 import google.generativeai as genai
-from starlette.config import Config
+from fastapi import APIRouter
+from app.settings import settings
 
-from fastapi import FastAPI
-
-app = FastAPI()
-
-config = Config(".env")
-GEMINI_API_KEY = config("GEMINI_API_KEY")
+router = APIRouter(
+    prefix="/food_detection",
+)
 
 
-@app.get("/food_detection")
+@router.get("/")
 def food_detection(img_path: str):
     # set api key retrieved from .env file GEMINI_API_KEY variable
-    genai.configure(api_key=GEMINI_API_KEY)
+    genai.configure(api_key=settings.GEMINI_API_KEY)
 
     model = genai.GenerativeModel("gemini-pro-vision")
 
@@ -54,15 +52,15 @@ def food_detection(img_path: str):
     return foods, leftover_decision
 
 
-if __name__ == "__main__":
-    import argparse
+# if __name__ == "__main__":
+#     import argparse
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--img_path", type=str)
-    parser.add_argument("--api_key", type=str)
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("--img_path", type=str)
+#     parser.add_argument("--api_key", type=str)
 
-    args = parser.parse_args()
+#     args = parser.parse_args()
 
-    foods, leftover_decision = food_detection(args.img_path, args.api_key)
+#     foods, leftover_decision = food_detection(args.img_path, args.api_key)
 
-    print(f"foods: {foods} \nleftover_decision: {leftover_decision}")
+#     print(f"foods: {foods} \nleftover_decision: {leftover_decision}")
