@@ -17,7 +17,7 @@ def gemini_recycle_decision(img_path: str):
 
     recycle_decision = model.generate_content(
         [
-            "Please let me know if there is anything in this photo that needs separate recycling, along with the location.\n(Answer in this following form : '#. object_name (location in the given image) : bin category'), no additional text",
+            "Please let me know if there is anything in this photo that needs separate recycling, along with the location.\n(Answer in this following form : '#. object_name (location in the given image) : bin category'), with no additional text other than the form.",
             img,
         ],
         stream=True,
