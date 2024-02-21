@@ -2,6 +2,8 @@ import PIL.Image
 import google.generativeai as genai
 from fastapi import APIRouter
 from app.settings import settings
+import requests
+from io import BytesIO
 
 router = APIRouter(
     prefix="/recycle",
@@ -13,7 +15,10 @@ def gemini_recycle_decision(img_path: str):
     genai.configure(api_key=settings.GEMINI_API_KEY)
     model = genai.GenerativeModel("gemini-pro-vision")
 
-    img = PIL.Image.open(img_path)
+    url = img_path.split("images")
+    url[1] = url[1].replace("/", "%2F")
+    res = requests.get(url[0] + "images" + url[1])
+    img = PIL.Image.open(BytesIO(res.content))
 
     recycle_decision = model.generate_content(
         [

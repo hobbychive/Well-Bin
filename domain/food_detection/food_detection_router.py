@@ -2,6 +2,8 @@ import PIL.Image
 import google.generativeai as genai
 from fastapi import APIRouter
 from app.settings import settings
+import requests
+from io import BytesIO
 
 router = APIRouter(
     prefix="/food_detection",
@@ -16,7 +18,10 @@ def food_detection(img_path: str):
     model = genai.GenerativeModel("gemini-pro-vision")
 
     # TODO : img 어디서 가져올건지? firebase 같은 곳에 올리고 가져오기 ?
-    img = PIL.Image.open(img_path)
+    url = img_path.split("images")
+    url[1] = url[1].replace("/", "%2F")
+    res = requests.get(url[0] + "images" + url[1])
+    img = PIL.Image.open(BytesIO(res.content))
 
     # get food list (e.g. ['apple', 'banana', 'orange'])
     foods = model.generate_content(
